@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Last Will Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+
     <style>
 
        #willForm input{
@@ -77,7 +79,7 @@
             width: 150px;
         }
 
-        #willForm .button2{
+        #willForm .button2, #willContent .button2{
             padding: 10px;
             margin: auto;
             background-color: #134ea0;
@@ -141,6 +143,8 @@
         #willContent{
             text-align: justify;
             padding: 10px;
+            max-width: 900px;
+            margin: auto;
         }
 
         #willContent .willTitle{
@@ -183,12 +187,16 @@
             #willForm {
                 display: none !important;
             }
-            .stampImg{
-                visibility: hidden;
+            .stamp{
+                display: none !important;
+            }
+            button {
+                display: none !important;
             }
             @page {
                 size: auto;   /* auto is the initial value */
-                margin: 0;  /* this affects the margin in the printer settings */
+                margin-top: 400px;  /* this affects the margin in the printer settings */
+                
             }
         }
     </style>
@@ -198,11 +206,11 @@
     <form id="willForm">
         <h1>Last Will Generator</h1>
         <h2>Your Information</h2>
-        <label for="name">Name:</label>
-        <input type="text" id="username" required>
+        <label >Name:</label>
+        <input type="text" id="username" >
         
-        <label for="age">Age:</label>
-        <input type="number" id="userage" required>
+        <label >Age:</label>
+        <input type="number" id="userage" >
         
         <!-- <label for="relationship">Son/Daughter/Wife of:</label>-->
         <br><br>
@@ -211,10 +219,10 @@
             <option>Daughter</option>
             <option>Wife</option>
         </select> of:
-        <input type="text" id="userrelationship" required>
+        <input type="text" id="userrelationship" >
 
-        <label for="address">Address:</label>
-        <input type="text" id="useraddress" required>
+        <label >Address:</label>
+        <input type="text" id="useraddress" >
 
         <h2>All Beneficiaries to get properties</h2>
         <div id="beneficiary-list">
@@ -284,7 +292,7 @@
                 for (let j = 0; j < benArr.length; j++) {
 
                     willTableHTML = willTableHTML + "<tr><td>" + (i+j+1) + "</td><td>" + (propArr[i].getElementsByClassName("property"))[0].value + ", " + (propArr[i].getElementsByClassName("address"))[0].value + "</td>";
-                    willTableHTML = willTableHTML + "<td>" + (benArr[j].getElementsByClassName("percentage"))[0].value + "</td>";
+                    willTableHTML = willTableHTML + "<td style='text-align: center;'>" + (benArr[j].getElementsByClassName("percentage"))[0].value + "</td>";
                     willTableHTML = willTableHTML + "<td>" + (benArr[j].getElementsByClassName("beneficiary"))[0].value + "</td></tr>";
                     
                 }
@@ -306,9 +314,17 @@
             willHTML = willHTML +vasiyatPart12 + "<br><br><br>";
             willHTML = willHTML +vasiyatPart13;
 
+            willHTML = willHTML + '<br><br><button class="button2"  onclick="window.print()">Print</button>';
+
             document.getElementById("willContent").innerHTML = willHTML;
             document.getElementById("willContent").style.display = "block";
+   
+
+             $('html, body').animate({
+              scrollTop: $("#willContent").offset().top
+             }, 500);
         }
+
 
         function addBeneficiary(button) {
             beneficiaryCount++;
@@ -316,14 +332,14 @@
             const newBeneficiaryInput = document.createElement('div');
             newBeneficiaryInput.setAttribute("class", "newBen");
             newBeneficiaryInput.innerHTML = `
-                <label for="beneficiary${beneficiaryCount}">Beneficiary ${beneficiaryCount} Name:</label>
-                <input type="text" class="benName" id="beneficiary${beneficiaryCount}" required>
+                <label ">Beneficiary ${beneficiaryCount} Name:</label>
+                <input type="text" class="benName" id="beneficiary${beneficiaryCount}" >
 
-                <label for="relation">Relation:</label>
-                <input type="text" class="relation" required>
+                <label >Relation:</label>
+                <input type="text" class="relation" >
 
-                <label for="address">Address:</label>
-                <input type="text" class="address" required>
+                <label >Address:</label>
+                <input type="text" class="address" >
                 <button class="deleteParentDiv" onclick="removeParentDiv(this)">Remove</button>
 
             `;
@@ -351,11 +367,11 @@
             propertyDiv.setAttribute("class", "newProp");
             propertyDiv.innerHTML = `
                 <h3>Property ${propertyCount} Details</h3>
-                <label for="property">Property Name:</label>
-                <input type="text" class="property" required>
+                <label >Property Name:</label>
+                <input type="text" class="property" >
 
-                <label for="address">Address/other information:</label>
-                <input type="text" class="address" required>
+                <label >Address/other information:</label>
+                <input type="text" class="address" >
 
                 <div class="propertyBeneficiaryList"></div>
                 <button type="button" class="button3" onclick="assignBeneficiary(this)">Assign Beneficiary</button>
@@ -385,18 +401,21 @@
 
   
             beneficiaryDiv.innerHTML = `
-                <label for="beneficiary">Beneficiary:</label>
-                <select class="beneficiary" required>
+                <label >Beneficiary:</label>
+                <select class="beneficiary" >
                     ${benOptions}
                 </select>
                 
                 <br>
-                <label for="percentage">Percentage Share:</label>
-                <input type="number" class="percentage" required>%<br>
+                <label >Percentage Share:</label>
+                <input type="number" class="percentage" >%<br>
                 <button class="deleteParentDiv" onclick="removeParentDiv(this)">Remove</button>
             `;
             propertyBeneficiaryList.appendChild(beneficiaryDiv);
         }
+        document.getElementById('willForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+        });
 
         // document.getElementById('willForm').addEventListener('submit', function (e) {
         //     e.preventDefault();
