@@ -189,6 +189,7 @@
             @page {
                 size: auto;   /* auto is the initial value */
                 margin: 0;  /* this affects the margin in the printer settings */
+                margin-top: 400px;
             }
         }
     </style>
@@ -308,6 +309,11 @@
 
             document.getElementById("willContent").innerHTML = willHTML;
             document.getElementById("willContent").style.display = "block";
+   
+
+            $('html, body').animate({
+             scrollTop: $("#willContent").offset().top
+            }, 1000);
         }
 
         function addBeneficiary(button) {
